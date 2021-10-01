@@ -3,14 +3,14 @@ Player = require('./player.js');
 
 module.exports = class Room {
 
-    constructor(room) {
+    constructor(room,wss) {
 
         // Important Variables
         this.room = room;
+        this.wss = wss;
         this.maxPlayers = 4;
         this.tickLength = 10;
         this.buyTime = 20000;
-        this.broadcastChanges = false;
 
         // Player Variables
         this.players = [];
@@ -28,7 +28,7 @@ module.exports = class Room {
         this.terrainSetting = null;
 
         // Map Variables
-        this.currentMapType = null;
+        this.currentTerrainType = null;
         this.mapWidth = 100;
         this.terrain = [];
         this.trees = [];
@@ -63,7 +63,7 @@ module.exports = class Room {
         // Find the map in the preset list.
         presets.forEach(preset => {
             if (mapType == preset.name) {
-                this.currentMapType = preset.name;
+                this.currentTerrainType = preset.name;
                 amplitude = preset.amplitude;
                 treeDensity = preset.treeDensity;
                 mapChosen = true;
@@ -77,8 +77,8 @@ module.exports = class Room {
 
         // If map not in preset list, just choose a random preset.
         if (!mapChosen) {
-            preset = presets[randomIntFromInterval(0,presets.length-1)];
-            this.currentMapType = preset.name;
+            var preset = presets[randomIntFromInterval(0,presets.length-1)];
+            this.currentTerrainType = preset.name;
             amplitude = preset.amplitude;
             treeDensity = preset.treeDensity;
         }
@@ -96,11 +96,9 @@ module.exports = class Room {
         while (i < n) {
             this.terrain.push(a * Math.pow(Math.sin(i * s - r),2) + 
                               a * Math.pow(Math.cos(2 * i * s + 2 * r),2) + 
-                              a * Math.pow(Math.sin(2 * Math.pi * i * s + r),2));
+                              a * Math.pow(Math.sin(12 * i * s + r),2));
             i = i + 1;
         }
-
-        console.log(this.terrain);
 
     }
 
@@ -121,6 +119,10 @@ module.exports = class Room {
         while (i < n) {
             if (this.players[i] == null) {
                 this.players[i] = new Player(id);
+                // If the room does not have a host, make this player the host.
+                if (!this.hasHost()) {
+                    this.players[i].isHost = true;
+                }
                 return;
             }
             i = i + 1;
@@ -142,6 +144,19 @@ module.exports = class Room {
             i = i + 1;
         }
 
+        // If the room does not have a host anymore, then promote one player. 
+        // If there are no players, the room will get closed in socket.js
+        if (!this.hasHost()) {
+            i = 0;
+            while (i < n) {
+                if (this.players[i] != null) {
+                    this.players[i].isHost = true;
+                    return;
+                }
+                i = i + 1;
+            }
+        }
+
     }
 
     isEmpty() {
@@ -159,7 +174,66 @@ module.exports = class Room {
 
     }
 
+    hasHost() {
+
+        // Check if there is a host.
+        var i = 0;
+        var n = this.players.length;
+        while (i < n) {
+            if (this.players[i] != null) {
+                if (this.players[i].isHost) {
+                    return true;
+                }
+            }
+            i = i + 1;
+        }
+        return false
+
+    }
+
     input(id,input) {
+
+        // Check if the id given is in the room.
+        var playerNumber = -1;
+        var i = 0;
+        var n = this.players.length;
+        while (i < n) {
+            if (this.players[i] != null) {
+                if (this.players[i].id == id) {
+                    playerNumber = i;
+                }
+            } 
+            i = i + 1;
+        }
+
+        // If the player is not in the room return.
+        if (playerNumber == -1) {
+            return;
+        }
+
+        // Get the player object for the given id.
+        var player = this.players[playerNumber];
+
+        // Get the command and the arguments.
+        var args = input.split(" ");
+        var command = args.pop();
+
+        // Start up sequence.
+        if (player.isHost && !this.started) {
+
+            // Set the terrain type.
+            if (command == "choose_map_type") {
+                this.terrainSetting = arguments[0];
+            } 
+            
+            // Start the game.
+            else if (command == "start") {
+                this.started = true;
+                this.generateMap();
+                this.broadcast(JSON.stringify(this.toJSON()));
+            }
+
+        } 
 
     }
 
@@ -168,6 +242,27 @@ module.exports = class Room {
     }
 
     toJSON() {
+        return {
+            terrainType: this.currentTerrainType,
+            terrain: this.terrain
+        };
+    }
+
+    broadcast(message) {
+
+        var users = new Set();
+
+        this.players.forEach(player => {
+            if (player != null) {
+                users.add(player.id);
+            }
+        });
+
+        this.wss.clients.forEach(client => {
+            if (users.has(client.id)) {
+                client.send(message);
+            }
+        });
 
     }
 

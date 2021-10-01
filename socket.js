@@ -41,7 +41,7 @@ wss.on('connection', ws => {
         command = message.command;
         args = message.args;
 
-        // Check if the message had the right keys.
+        // Check if the message had the right keys. If not return.
         if (command == null || args == null) {
             return;
         }
@@ -87,7 +87,7 @@ wss.on('connection', ws => {
             if (users.get(ws.id) == null) {
 
                 // Create a new room.
-                room = new Room(generateNewRoomNumber());
+                room = new Room(generateNewRoomNumber(), wss);
 
                 // Add room to the rooms map.
                 rooms.set(room.room,room);
@@ -102,14 +102,31 @@ wss.on('connection', ws => {
 
             }
 
+        } else if (command == 'input') {
+
+            // Get the room the player is in.
+            roomNumber = users.get(ws.id)
+
+            // Check if the player is in a room.
+            if (roomNumber != null) {
+
+                // If no input was given, return.
+                if (args.length == 0) {
+                    return;
+                }
+
+                // Get the room number.
+                room = rooms.get(roomNumber);
+
+                // Send the input to the room, with the given id.
+                room.input(ws.id, args[0]);
+
+            }
+
         }
 
-        //log the received message and send it back to the client
-        //console.log('received: %s', message);
-        //ws.send(`Hello, you sent -> ${message}`);
     });
-  
-    //ws.send('Hi there, I am a WebSocket server');
+
 });
 
 // Keep track of user disconnections.
@@ -173,6 +190,7 @@ server.listen(process.env.PORT || 8999, () => {
 // When creating a new room to store, its important that each room has a unique identifier.
 // This method generates a new identifier for a room, ensuring that there are no duplicates.
 function generateNewRoomNumber() {
+
     // Get all current room numbers.
     var currentRoomNumbers = Array.from(rooms.keys());
 
@@ -190,4 +208,5 @@ function generateNewRoomNumber() {
 
     // Else return the new number.
     return result;
+    
 }
