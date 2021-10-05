@@ -1,4 +1,4 @@
-Player = require('./player.js');
+const Player = require('./player.js');
 // Projectile = require('./projectile.js');
 
 module.exports = class Room {
@@ -8,32 +8,29 @@ module.exports = class Room {
         // Important Variables
         this.room = room;
         this.wss = wss;
-        this.maxPlayers = 4;
         this.tickLength = 10;
         this.buyTime = 20000;
 
         // Player Variables
         this.players = [];
-        var i = 0;
-        var n = this.maxPlayers;
-        while (i < n) {
-            this.players.push(null);
-            i = i + 1;
-        }
         this.currentTurn = 0;
-
+        
+        // Projectiles
+        this.projectiles = [],
+        
         // Game Variables
         this.started = false;
         this.inBuyPeriod = false;
         this.terrainSetting = null;
 
         // Map Variables
-        this.currentTerrainType = null;
-        this.mapWidth = 100;
-        this.terrain = [];
-        this.trees = [];
-        this.projectiles = [];
-        this.wind = 0;
+        this.map = {
+            currentTerrainType: null,
+            mapWidth: 100,
+            terrain: [],
+            trees: [],
+            wind: 0
+        }
 
     }
 
@@ -63,7 +60,7 @@ module.exports = class Room {
         // Find the map in the preset list.
         presets.forEach(preset => {
             if (mapType == preset.name) {
-                this.currentTerrainType = preset.name;
+                this.map.currentTerrainType = preset.name;
                 amplitude = preset.amplitude;
                 treeDensity = preset.treeDensity;
                 mapChosen = true;
@@ -78,25 +75,25 @@ module.exports = class Room {
         // If map not in preset list, just choose a random preset.
         if (!mapChosen) {
             var preset = presets[randomIntFromInterval(0,presets.length-1)];
-            this.currentTerrainType = preset.name;
+            this.map.currentTerrainType = preset.name;
             amplitude = preset.amplitude;
             treeDensity = preset.treeDensity;
         }
 
         var sampleDistance = 0.02;
         var randomOffset = randomIntFromInterval(0,255);
-        this.terrain = [];
+        this.map.terrain = [];
 
         var a = amplitude;
         var r = randomOffset;
         var s = sampleDistance;
 
         var i = 0;
-        var n = this.mapWidth;
+        var n = this.map.mapWidth;
         while (i < n) {
-            this.terrain.push(a * Math.pow(Math.sin(i * s - r),2) + 
-                              a * Math.pow(Math.cos(2 * i * s + 2 * r),2) + 
-                              a * Math.pow(Math.sin(12 * i * s + r),2));
+            this.map.terrain.push(a * Math.pow(Math.sin(i * s - r),2) + 
+                                  a * Math.pow(Math.cos(2 * i * s + 2 * r),2) + 
+                                  a * Math.pow(Math.sin(12 * i * s + r),2));
             i = i + 1;
         }
 
@@ -106,27 +103,20 @@ module.exports = class Room {
 
         // Check if the player is already in the room.
         this.players.forEach(player => {
-            if (player != null) {
-                if (player.id == id) {
-                    return;
-                }
+            if (player.id == id) {
+                return;
             }
         });
 
-        // Add the new player to the list if there is a free spot.
-        var i = 0;
-        var n = this.players.length;
-        while (i < n) {
-            if (this.players[i] == null) {
-                this.players[i] = new Player(id);
-                // If the room does not have a host, make this player the host.
-                if (!this.hasHost()) {
-                    this.players[i].isHost = true;
-                }
-                return;
-            }
-            i = i + 1;
+        this.players.push(new Player(id));
+
+        // If the room does not have any host.
+        if (!this.hasHost()) {
+            this.players[0].promote();
         }
+
+        // Broadcast changes to all players.
+        this.broadcast(JSON.stringify(this.toJSON()));
         
     }
 
@@ -136,10 +126,9 @@ module.exports = class Room {
         var i = 0;
         var n = this.players.length;
         while (i < n) {
-            if (this.players[i] != null) {
-                if (this.players[i].id == id) {
-                    this.players[i] = null;
-                }
+            if (this.players[i].id == id) {
+                this.players.splice(i,1);
+                n = n - 1;
             }
             i = i + 1;
         }
@@ -147,31 +136,21 @@ module.exports = class Room {
         // If the room does not have a host anymore, then promote one player. 
         // If there are no players, the room will get closed in socket.js
         if (!this.hasHost()) {
-            i = 0;
-            while (i < n) {
-                if (this.players[i] != null) {
-                    this.players[i].isHost = true;
-                    return;
-                }
-                i = i + 1;
+            if (this.players.length != 0) {
+                this.players[0].promote();
             }
         }
+
+        // Broadcast changes to all players.
+        this.broadcast(JSON.stringify(this.toJSON()));
 
     }
 
     isEmpty() {
-
-        // Check if all players are null.
-        var i = 0;
-        var n = this.players.length;
-        while (i < n) {
-            if (this.players[i] != null) {
-                return false;
-            }
-            i = i + 1;
+        if (this.players.length == 0) {
+            return true;
         }
-        return true;
-
+        return false;
     }
 
     hasHost() {
@@ -216,20 +195,21 @@ module.exports = class Room {
 
         // Get the command and the arguments.
         var args = input.split(" ");
-        var command = args.pop();
+        var command = args.shift();
 
         // Start up sequence.
         if (player.isHost && !this.started) {
 
             // Set the terrain type.
             if (command == "choose_map_type") {
-                this.terrainSetting = arguments[0];
+                this.terrainSetting = args[0];
+                this.broadcast(JSON.stringify(this.toJSON()));
             } 
             
             // Start the game.
             else if (command == "start") {
                 this.started = true;
-                this.generateMap();
+                this.generateMap(this.terrainSetting);
                 this.broadcast(JSON.stringify(this.toJSON()));
             }
 
@@ -242,10 +222,30 @@ module.exports = class Room {
     }
 
     toJSON() {
+
+        var playersJSONList = [];
+        this.players.forEach(player => {
+            playersJSONList.push(player.toJSON());
+        });
+
+        var projectilesJSONList = [];
+        /*
+        this.projectiles.forEach(projectile => {
+            projectilesJSONList.push(projectile.toJSON());
+        }); 
+        */
+
         return {
-            terrainType: this.currentTerrainType,
-            terrain: this.terrain
+            room: this.room,
+            players: playersJSONList,
+            currentTurn: this.currentTurn,
+            projectiles: projectilesJSONList,
+            started: this.started,
+            inBuyPeriod: this.inBuyPeriod,
+            terrainSetting: this.terrainSetting,
+            map: this.map
         };
+
     }
 
     broadcast(message) {

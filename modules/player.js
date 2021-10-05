@@ -7,4 +7,15 @@ module.exports = class Player {
         this.location = {x: 0, y: 0}
     }
 
+    promote() {
+        this.isHost = true;
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            isHost: this.isHost
+        }
+    }
+
 }
