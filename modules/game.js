@@ -236,14 +236,17 @@ module.exports = class Room {
         */
 
         return {
-            room: this.room,
-            players: playersJSONList,
-            currentTurn: this.currentTurn,
-            projectiles: projectilesJSONList,
-            started: this.started,
-            inBuyPeriod: this.inBuyPeriod,
-            terrainSetting: this.terrainSetting,
-            map: this.map
+            type: "game_data", 
+            data: {
+                room: this.room,
+                players: playersJSONList,
+                currentTurn: this.currentTurn,
+                projectiles: projectilesJSONList,
+                started: this.started,
+                inBuyPeriod: this.inBuyPeriod,
+                terrainSetting: this.terrainSetting,
+                map: this.map
+            }
         };
 
     }

@@ -1,13 +1,11 @@
-// Node Modules
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const sha256 = require('js-sha256').sha256;
-
-// My Modules
 const Room = require('./modules/game.js')
 
 const app = express();
+const port = 8999;
 
 // Initialize a http server.
 const server = http.createServer(app);
@@ -78,6 +76,9 @@ wss.on('connection', ws => {
                     // Update the player map to include the room that they're in.
                     users.set(ws.id,roomNumber);
 
+                    // Send a message back stating that the user is in a room.
+                    ws.send(JSON.stringify({type:'in_room',data:true}));
+
                 }
             }
             
@@ -100,6 +101,9 @@ wss.on('connection', ws => {
                 // Update the player map to include the room that they're in.
                 users.set(ws.id,room.room);
 
+                // Send a message back stating that the user is in a room.
+                ws.send(JSON.stringify({type:'in_room',data:true}));
+
             }
 
         } else if (command == 'input') {
@@ -115,13 +119,44 @@ wss.on('connection', ws => {
                     return;
                 }
 
-                // Get the room number.
+                // Get the room object.
                 room = rooms.get(roomNumber);
 
                 // Send the input to the room, with the given id.
                 room.input(ws.id, args[0]);
 
             }
+
+        } else if (command == 'in_room') {
+
+            // Get the room the player is in.
+            roomNumber = users.get(ws.id)
+
+            if (roomNumber == null) {
+                ws.send(JSON.stringify({type:'in_room',data:false}));
+            }
+
+            ws.send(JSON.stringify({type:'in_room',data:true}));
+
+        } else if (command == 'get_game_data') {
+
+            // Get the room the player is in.
+            roomNumber = users.get(ws.id)
+
+            if (roomNumber != null) {
+                
+                // Get the room object.
+                room = rooms.get(roomNumber);
+                ws.send(JSON.stringify(room.toJSON()));
+
+            }
+
+            ws.send(JSON.stringify({type:'game_data',data:null}));
+
+        } else if (command == 'get_id') {
+
+            // Send the user their id.
+            ws.send(JSON.stringify({type:'id',data:ws.id}));
 
         }
 
@@ -181,8 +216,8 @@ setInterval(function () {
 }, 10);
 
 // Start server.
-server.listen(process.env.PORT || 8999, () => {
-    console.log(`Server started on port ${server.address().port} :)`);
+server.listen(process.env.PORT || port, () => {
+    console.log(`Websocket listening on port ${server.address().port}`);
 });
 
 // Extra Methods

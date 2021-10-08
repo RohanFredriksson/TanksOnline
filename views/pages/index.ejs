@@ -9,14 +9,11 @@
     <%- include('../partials/header'); %>
   </header>
 
-  <form name="room" action="#" onsubmit="joinRoom();" method="GET">
-    Join Room: <input type="text" name="number">
-    <input type="submit" value="Submit">
-  </form>
+  <h1><%- ip %></h1>
 
-  <form name="room" action="#" onsubmit="createRoom();" method="GET">
-    Create Room: <input type="submit" value="Submit">
-  </form>
+  <div id="violet" style="width:100px; height:100px; background-color: blueviolet;"></div>
+  <div id="red" style="width:100px; height:100px; background-color: red;"></div>
+  <div id="green" style="width:100px; height:100px; background-color: chartreuse"></div>
 
   <footer>
     <%- include('../partials/footer'); %>
@@ -24,48 +21,121 @@
 
   <script>
 
-    function joinRoom() {
-      // Get the room number from the form.
-      let x = document.forms["room"]
-      roomNumber = x["number"].value.toUpperCase();
+    const ip = "<%- ip %>";
 
-      // Check whether the room is real.
-      fetch("/isRoomNumber",{
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({number: roomNumber})
-      }).then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error ('Fetch request failed.');
-        }
-      }).then((json) => {
-        // If the room number exists, redirect to the room.
-        if (json.exists == true) {
-          window.location.href = "/" + roomNumber;
-        } else {
-          window.history.pushState({}, document.title, window.location.pathname);
-        }
-      });
+    var id = "";
+    var isConnected = false;
+    var inRoom = false;
+
+    var socket = new WebSocket("ws://192.168.1.5:8999");
+    // var socket = new WebSocket("ws://" + ip  +":8999");
+
+    socket.onopen = function (event) {
+      isConnected = true;
+      getId();
+      checkInRoom();
+    };
+
+    socket.onclose = function (event) {
+      isConnected = false;
+      inRoom = false;
     }
 
-    function createRoom() {
-      fetch("/createRoom",{
-        method: "GET",
-        headers: {"Content-Type": "application/json"}
-      }).then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error ('Fetch request failed.');
+    socket.onmessage = function (event) {
+      
+      message = event.data;
+      message = JSON.parse(message);
+
+      if ("type" in message) {
+
+        if (message.type == 'game_data') {
+          console.log(message.data);
+        } 
+        
+        else if (message.type == 'in_room') {
+          inRoom = message.data;
+        } 
+        
+        else if (message.type == 'id') {
+          id = message.data;
         }
-      }).then((json) => {
-        console.log(json)
-        window.location.href = "/" + json.room;
-      });
+
+      }
+
+    }
+
+    // Will create a room and join it if you are not in a room.
+    // If in a room, this will do nothing.
+    function createRoom() {
+      if (isConnected && !inRoom) {
+        socket.send(JSON.stringify({command:"create",args:[]}));
+        checkInRoom();
+      }
+    }
+
+    // Joins the room with the given number.
+    function joinRoom(room) {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"join",args:[room]}));
+        checkInRoom();
+      }
+    }
+
+    // Sends input command to the room.
+    function input(command) {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"input",args:[command]}));
+      }
+    }
+
+    // Will update the inRoom variable.
+    function checkInRoom() {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"in_room",args:[]}));
+      }
+    }
+
+    // Will request game data from the server.
+    function requestGameData() {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"get_game_data",args:[]}));
+      }
+    }
+
+    // Will request the player id from the server.
+    function getId() {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"get_id",args:[]}));
+      }
     }
     
+  </script>
+
+  <script>
+
+    violet = document.getElementById("violet");
+    red = document.getElementById("red");
+    green = document.getElementById("green");
+
+    violet.addEventListener('click', () => {
+      createRoom();
+    });
+
+    red.addEventListener('click', () => {
+      roomNumber = prompt("Enter a room number:");
+      joinRoom(roomNumber);
+    });
+
+    green.addEventListener('click', () => {
+      createRoom();
+    });
+
+    document.addEventListener('keydown', () => {
+      console.log('id: ' + id);
+      console.log('isConnected: ' + isConnected);
+      console.log('inRoom: ' + inRoom);
+    });
+
   </script>
 
 </body>
