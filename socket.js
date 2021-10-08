@@ -134,9 +134,9 @@ wss.on('connection', ws => {
 
             if (roomNumber == null) {
                 ws.send(JSON.stringify({type:'in_room',data:false}));
+            } else {
+                ws.send(JSON.stringify({type:'in_room',data:true}));
             }
-
-            ws.send(JSON.stringify({type:'in_room',data:true}));
 
         } else if (command == 'get_game_data') {
 
