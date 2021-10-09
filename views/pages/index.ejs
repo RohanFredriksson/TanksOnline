@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('../partials/head'); %>
+  <meta charset="UTF-8">
+  <title>Tanks Online</title>
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  <meta name="viewport" content="width=device-width">
 </head>
-<body class="hidden-scroll">
+<body class="hidden-scroll nooverflow">
 
-  <header>
-    <%- include('../partials/header'); %>
+  <header class="headertitle">
+    <p style="padding-top: 0.4vh; padding-left: 0.5vw;">Tanks Online</p> 
   </header>
 
-  <div>
-    <div style="float:left; width:50%; height:100%; background-color: black;">
-      <!--
-      <div id="violet" style="width:100px; height:100px; background-color: blueviolet;"></div>
-      <div id="red" style="width:100px; height:100px; background-color: red;"></div>
-      <div id="green" style="width:100px; height:100px; background-color: chartreuse"></div>
-      -->
-      <div style="margin-left: 37.5%; margin-top: 25vh; margin-bottom: 25vh; width:50%; height: 50vh; background-color: blue;">
-        <ul style="list-style-type: none; margin:0%; padding:0%">
-          <li><p style="margin-top:0%; text-align: center;">Create Room</p></li>
-          <li><p style="margin-top:0%; text-align: center;">Join Room</p></li>
-        </ul>
-      </div>
+  <div class="bg"></div>
+  <div class="bg bg2"></div>
+  <div class="bg bg3"></div>
+
+  <!--
+  <div id="violet" style="width:100px; height:100px; background-color: blueviolet;"></div>
+  <div id="red" style="width:100px; height:100px; background-color: red;"></div>
+  <div id="green" style="width:100px; height:100px; background-color: chartreuse"></div>
+  -->
+  <div id="desktop">
+
+    <!-- Landing Page Button Box -->
+    <div class="landingbox content" style="margin-left: 17.5%;">
+      <ul style="list-style-type: none; margin:0%; padding:0%">
+        <li><p style="margin-top:0%; text-align: center;">Create Room</p></li>
+        <li><p style="margin-top:0%; text-align: center;">Join Room</p></li>
+      </ul>
     </div>
-    <div style="float:left; width:50%; height:100%;">
-      <div style="margin-left: 12.5%; margin-top: 25vh; margin-bottom: 25vh; width:50%; height: 50vh; background-color: blue;"></div>
+    
+    <!-- Tank Customisation Box -->
+    <div class="landingbox content" style="margin-left: 52.5%;">
+      <ul style="list-style-type: none; margin:0%; padding:0%">
+        <li><p style="margin-top:0%; text-align: center;">Create Room</p></li>
+        <li><p style="margin-top:0%; text-align: center;">Join Room</p></li>
+      </ul>
     </div>
+
   </div>
   
-  <footer>
-    <%- include('../partials/footer'); %>
-  </footer>
+  <!-- Line in centre of screen 
+  <div style="position: absolute; margin-left: 50%; height: 100vh; width: 1px; background-color: black;"></div>
+  -->
+  <footer></footer>
 
   <script>
 
