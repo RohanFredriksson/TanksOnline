@@ -118,15 +118,15 @@ header {
     #wide {
         display:block
     }
-    
+
 }
 
 .desktopbox {
     width:30vw; 
     height: 40vw; 
     position:absolute; 
-    top:50%; -ms-transform: 
-    translateY(-47%); 
+    top:50%; 
+    -ms-transform: translateY(-47%); 
     transform: translateY(-47%); 
 }
 
@@ -134,8 +134,8 @@ header {
     width:30vw; 
     height: 40vw; 
     position:absolute; 
-    top:50%; -ms-transform: 
-    translateY(-47%); 
+    top:50%; 
+    -ms-transform: translateY(-47%); 
     transform: translateY(-47%); 
 }
 
@@ -143,7 +143,7 @@ header {
     width:60vh; 
     height: 80vh; 
     position:absolute; 
-    top:50%; -ms-transform: 
-    translateY(-47%); 
+    top:50%; 
+    -ms-transform: translateY(-47%); 
     transform: translateY(-47%); 
 }
