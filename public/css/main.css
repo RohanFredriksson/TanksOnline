@@ -39,16 +39,6 @@ header {
     overflow: hidden
 }
 
-.landingbox {
-    width:30vw; 
-    height: 40vw; 
-    position:absolute; 
-    top:50%; -ms-transform: 
-    translateY(-50%); 
-    transform: translateY(-50%); 
-    background-color: gray;
-}
-
 .bg {
     animation:slide 3s ease-in-out infinite alternate;
     /*background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);*/
@@ -85,4 +75,75 @@ header {
     100% {
         transform:translateX(25%);
     }
+}
+
+#desktop {
+    display:block
+}
+
+#phone {
+    display:none
+}
+
+#wide {
+    display:none
+}
+
+@media only screen and (max-aspect-ratio: 1/1) {
+
+    #desktop {
+        display:none
+    }
+
+    #phone {
+        display:block
+    }
+    
+    #wide {
+        display:none
+    }
+
+}
+
+@media only screen and (min-aspect-ratio: 2/1) {
+
+    #desktop {
+        display:none
+    }
+
+    #phone {
+        display:none
+    } 
+
+    #wide {
+        display:block
+    }
+    
+}
+
+.desktopbox {
+    width:30vw; 
+    height: 40vw; 
+    position:absolute; 
+    top:50%; -ms-transform: 
+    translateY(-47%); 
+    transform: translateY(-47%); 
+}
+
+.phonebox {
+    width:30vw; 
+    height: 40vw; 
+    position:absolute; 
+    top:50%; -ms-transform: 
+    translateY(-47%); 
+    transform: translateY(-47%); 
+}
+
+.widebox {
+    width:60vh; 
+    height: 80vh; 
+    position:absolute; 
+    top:50%; -ms-transform: 
+    translateY(-47%); 
+    transform: translateY(-47%); 
 }
