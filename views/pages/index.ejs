@@ -102,25 +102,6 @@
 
   <script>
 
-    desktopRoomInput = document.getElementById('desktop_room_input');
-    wideRoomInput = document.getElementById('wide_room_input');
-
-    desktopRoomInput.onkeyup = function(e) {
-      newValue = desktopRoomInput.value
-      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
-      wideRoomInput.value = newValue;
-    }
-
-    wideRoomInput.onkeyup = function(e) {
-      newValue = wideRoomInput.value
-      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
-      desktopRoomInput.value = newValue;
-    }
-
-  </script>
-
-  <script>
-
     const ip = "<%- ip %>";
 
     var id = "";
@@ -213,6 +194,26 @@
 
   <script>
 
+    desktopRoomInput = document.getElementById('desktop_room_input');
+    wideRoomInput = document.getElementById('wide_room_input');
+
+    desktopRoomInput.onkeyup = function(e) {
+      newValue = desktopRoomInput.value
+      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+      wideRoomInput.value = newValue;
+    }
+
+    wideRoomInput.onkeyup = function(e) {
+      newValue = wideRoomInput.value
+      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+      desktopRoomInput.value = newValue;
+    }
+
+  </script>
+
+  <!--
+  <script>
+
     violet = document.getElementById("violet");
     red = document.getElementById("red");
     green = document.getElementById("green");
@@ -237,6 +238,7 @@
     });
 
   </script>
+  -->
 
 </body>
 </html>
