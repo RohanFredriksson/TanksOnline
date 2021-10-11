@@ -29,6 +29,26 @@ header {
     border-bottom: 1px solid #222;
 }
 
+.inputbox {
+    border: 0; 
+    padding: 0; 
+    text-align: center; 
+    width:100%; 
+    height: 100%;
+    border-radius:1vh;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.inputbox:focus {
+    outline: none;
+    box-shadow:0 0 1vh rgba(0,0,0,.5);
+}
+
+.hoverable:hover {
+    box-shadow:0 0 1vh rgba(0,0,0,.5);
+    cursor: pointer;
+}
+
 .headertitle {
     font-size: 4vh;
     margin: 0;
@@ -41,7 +61,6 @@ header {
 
 .bg {
     animation:slide 3s ease-in-out infinite alternate;
-    /*background-image: linear-gradient(-60deg, #6c3 50%, #09f 50%);*/
     background-image: linear-gradient(-60deg, #ff5b2e 50%, #ffaf2e 50%);
     bottom:0;
     left:-50%;
@@ -131,8 +150,8 @@ header {
 }
 
 .phonebox {
-    width:30vw; 
-    height: 40vw; 
+    width:65vw; 
+    height: 87vw; 
     position:absolute; 
     top:50%; 
     -ms-transform: translateY(-47%); 
