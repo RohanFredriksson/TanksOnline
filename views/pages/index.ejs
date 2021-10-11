@@ -36,7 +36,7 @@
 
         <!-- Text Bar -->
         <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
+          <input id="desktop_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
         </div>
 
         <!-- Join Room Button -->
@@ -79,7 +79,7 @@
 
         <!-- Text Bar -->
         <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
+          <input id="wide_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
         </div>
 
         <!-- Join Room Button -->
@@ -98,10 +98,26 @@
 
   </div>
   
-  <!-- Line in centre of screen 
-  <div style="position: absolute; margin-left: 50%; height: 100vh; width: 1px; background-color: black;"></div>
-  -->
   <footer></footer>
+
+  <script>
+
+    desktopRoomInput = document.getElementById('desktop_room_input');
+    wideRoomInput = document.getElementById('wide_room_input');
+
+    desktopRoomInput.onkeyup = function(e) {
+      newValue = desktopRoomInput.value
+      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+      wideRoomInput.value = newValue;
+    }
+
+    wideRoomInput.onkeyup = function(e) {
+      newValue = wideRoomInput.value
+      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+      desktopRoomInput.value = newValue;
+    }
+
+  </script>
 
   <script>
 
