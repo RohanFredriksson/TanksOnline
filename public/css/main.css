@@ -168,6 +168,7 @@ header {
 }
 
 .desktopmessage {
+    cursor: default;
     margin-left:1vh;
     margin-top:1vh;
     width:15.5vw; 
@@ -185,6 +186,7 @@ header {
 }
 
 .widemessage {
+    cursor: default;
     margin-left:1vh;
     margin-top:1vh;
     width:31vh; 

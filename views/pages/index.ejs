@@ -114,20 +114,27 @@
     desktopMessage = document.getElementById('desktop_message');
     wideMessage = document.getElementById('wide_message');
 
+    sendMessageTimeout = null;
     async function sendMessage(m) {
       
+      // If the timeout is already running, stop it.
+      if (sendMessageTimeout != null) {
+        clearTimeout(sendMessageTimeout)
+        sendMessageTimeout = null
+      }
+
+      // Change the message in the box.
       desktopMessage.innerHTML = m;
       wideMessage.innerHTML = m;
 
+      // Make the message box visible.
       desktopMessageBox.style.opacity = 100;
       wideMessageBox.style.opacity = 100;
 
-      console.log("In Message")
-
-      setTimeout(() => {
+      // Make the message box disappear after 5 seconds.
+      sendMessageTimeout = setTimeout(() => {
         desktopMessageBox.style.opacity = 0;
         wideMessageBox.style.opacity = 0;
-        console.log("Closing Message")
       },5000);
       
     }
@@ -175,10 +182,8 @@
           id = message.data;
         }
 
-        else if (message.type == 'joined_room') {
-          if(!message.data){
-            sendMessage(message.message);
-          }
+        else if (message.type == 'message') {
+          sendMessage(message.data);
         }
 
       }
@@ -186,12 +191,11 @@
     }
 
     // Will create a room and join it if you are not in a room.
-    // If in a room, this will do nothing.
     function createRoom() {
-      if (isConnected && !inRoom) {
+      if (isConnected) {
         socket.send(JSON.stringify({command:"create",args:[]}));
         checkInRoom();
-      }
+      } 
     }
 
     // Joins the room with the given number.
