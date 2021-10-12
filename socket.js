@@ -54,16 +54,21 @@ wss.on('connection', ws => {
 
             // If no room number provided return.
             if (args.length == 0) {
-                ws.send(JSON.stringify({type:'joined_room',data:false,message:"No room number provided"}));
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"No room number provided."}));
                 return;
             }
 
             // Get the room number from the arguments.
             roomNumber = args[0].toUpperCase();
 
+            if (roomNumber.length != 4) {
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"Room numbers are 4 digits long."}));
+                return;
+            }
+
             // Check if the room doesn't exist.
             if (!rooms.has(roomNumber)) {
-                ws.send(JSON.stringify({type:'joined_room',data:false,message:roomNumber + " does not exist"}));
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:roomNumber + " does not exist."}));
                 return;
             }
 
@@ -72,7 +77,7 @@ wss.on('connection', ws => {
 
             // Check if the player is in a room.
             if (users.get(ws.id) != null) {
-                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id)}));
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id) + "."}));
                 return;
             }
 
@@ -85,13 +90,13 @@ wss.on('connection', ws => {
 
             // Send a message back stating that the user is in a room.
             ws.send(JSON.stringify({type:'in_room',data:true}));
-            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + roomNumber}));
+            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + roomNumber + "."}));
 
         } else if (command == 'create') {
 
             // Check if the player is in a room.
             if (!users.get(ws.id) == null) {
-                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id)}));
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id) + "."}));
                 return;
             }
 
@@ -111,7 +116,7 @@ wss.on('connection', ws => {
 
             // Send a message back stating that the user is in a room.
             ws.send(JSON.stringify({type:'in_room',data:true}));
-            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + room.room}));
+            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + room.room + "."}));
 
         } else if (command == 'input') {
 

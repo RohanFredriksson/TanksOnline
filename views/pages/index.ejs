@@ -18,6 +18,11 @@
 
   <div id="desktop">
 
+    <!-- Message Box -->
+    <div id="desktop_message_box" class="desktopmessage content">
+      <p id="desktop_message" style="font-size:1.5vw;"></p>
+    </div>
+
     <!-- Landing Page Button Box -->
     <div class="desktopbox content" style="margin-left: 17.5%;">
 
@@ -61,6 +66,11 @@
 
   <div id="wide">
 
+    <!-- Message Box -->
+    <div id="wide_message_box" class="widemessage content">
+      <p id="wide_message" style="font-size:3vh;"></p>
+    </div>
+
     <!-- Landing Page Button Box -->
     <div class="widebox content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
       
@@ -94,6 +104,35 @@
   </div>
   
   <footer></footer>
+
+  <script>
+
+    // Create message functionality.
+    desktopMessageBox = document.getElementById('desktop_message_box');
+    wideMessageBox = document.getElementById('wide_message_box');
+
+    desktopMessage = document.getElementById('desktop_message');
+    wideMessage = document.getElementById('wide_message');
+
+    async function sendMessage(m) {
+      
+      desktopMessage.innerHTML = m;
+      wideMessage.innerHTML = m;
+
+      desktopMessageBox.style.opacity = 100;
+      wideMessageBox.style.opacity = 100;
+
+      console.log("In Message")
+
+      setTimeout(() => {
+        desktopMessageBox.style.opacity = 0;
+        wideMessageBox.style.opacity = 0;
+        console.log("Closing Message")
+      },5000);
+      
+    }
+
+  </script>
 
   <script>
 
@@ -137,8 +176,9 @@
         }
 
         else if (message.type == 'joined_room') {
-          console.log(message.data);
-          console.log(message.message);
+          if(!message.data){
+            sendMessage(message.message);
+          }
         }
 
       }
