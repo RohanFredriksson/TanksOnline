@@ -54,57 +54,64 @@ wss.on('connection', ws => {
 
             // If no room number provided return.
             if (args.length == 0) {
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"No room number provided"}));
                 return;
             }
 
             // Get the room number from the arguments.
-            roomNumber = args[0];
+            roomNumber = args[0].toUpperCase();
 
-            // Check whether the room exists.
-            if (rooms.has(roomNumber)) {
-
-                // Get the room object for the room.
-                room = rooms.get(roomNumber);
-
-                // Check if the player is not in a room.
-                if (users.get(ws.id) == null) {
-
-                    // Add player to the room.
-                    room.addPlayer(ws.id);
-                    console.log("+ User: " + ws.id + " in Room: " + room.room);
-
-                    // Update the player map to include the room that they're in.
-                    users.set(ws.id,roomNumber);
-
-                    // Send a message back stating that the user is in a room.
-                    ws.send(JSON.stringify({type:'in_room',data:true}));
-
-                }
+            // Check if the room doesn't exist.
+            if (!rooms.has(roomNumber)) {
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:roomNumber + " does not exist"}));
+                return;
             }
-            
+
+            // Get the room object for the room.
+            room = rooms.get(roomNumber);
+
+            // Check if the player is in a room.
+            if (users.get(ws.id) != null) {
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id)}));
+                return;
+            }
+
+            // Add player to the room.
+            room.addPlayer(ws.id);
+            console.log("+ User: " + ws.id + " in Room: " + room.room);
+
+            // Update the player map to include the room that they're in.
+            users.set(ws.id,roomNumber);
+
+            // Send a message back stating that the user is in a room.
+            ws.send(JSON.stringify({type:'in_room',data:true}));
+            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + roomNumber}));
+
         } else if (command == 'create') {
 
-            // Check if the player is not in a room.
-            if (users.get(ws.id) == null) {
-
-                // Create a new room.
-                room = new Room(generateNewRoomNumber(), wss);
-
-                // Add room to the rooms map.
-                rooms.set(room.room,room);
-                console.log("+ Room: " + room.room);
-
-                // Add player to the room.
-                room.addPlayer(ws.id);
-                console.log("+ User: " + ws.id + " in Room: " + room.room);
-
-                // Update the player map to include the room that they're in.
-                users.set(ws.id,room.room);
-
-                // Send a message back stating that the user is in a room.
-                ws.send(JSON.stringify({type:'in_room',data:true}));
-
+            // Check if the player is in a room.
+            if (!users.get(ws.id) == null) {
+                ws.send(JSON.stringify({type:'joined_room',data:false,message:"You are already in room " + users.get(ws.id)}));
+                return;
             }
+
+            // Create a new room.
+            room = new Room(generateNewRoomNumber(), wss);
+
+            // Add room to the rooms map.
+            rooms.set(room.room,room);
+            console.log("+ Room: " + room.room);
+
+            // Add player to the room.
+            room.addPlayer(ws.id);
+            console.log("+ User: " + ws.id + " in Room: " + room.room);
+
+            // Update the player map to include the room that they're in.
+            users.set(ws.id,room.room);
+
+            // Send a message back stating that the user is in a room.
+            ws.send(JSON.stringify({type:'in_room',data:true}));
+            ws.send(JSON.stringify({type:'joined_room',data:true,message:"Successfully joined room " + room.room}));
 
         } else if (command == 'input') {
 

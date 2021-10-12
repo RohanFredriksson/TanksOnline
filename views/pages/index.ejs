@@ -27,7 +27,7 @@
     <div class="desktopbox content" style="margin-left: 17.5%;">
 
       <!-- Create Room Button -->
-      <div class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
+      <div id="desktop_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
           <p style="font-size:2.5vw; -ms-transform: translateY(0.75vw); transform: translateY(0.75vw);">Create a Room</p>
       </div>
 
@@ -36,11 +36,11 @@
 
         <!-- Text Bar -->
         <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input id="desktop_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
+          <input id="desktop_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
         </div>
 
         <!-- Join Room Button -->
-        <div class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
+        <div id="desktop_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
           <p style="margin-top:0.75vw ;font-size:2.5vw">Join</p>
         </div>
 
@@ -70,7 +70,7 @@
     <div class="widebox content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
       
       <!-- Create Room Button -->
-      <div class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
+      <div id="wide_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
         <p style="font-size:5vh; -ms-transform: translateY(1.5vh); transform: translateY(1.5vh);">Create a Room</p>
       </div>
 
@@ -79,11 +79,11 @@
 
         <!-- Text Bar -->
         <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input id="wide_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
+          <input id="wide_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
         </div>
 
         <!-- Join Room Button -->
-        <div class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
+        <div id="wide_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
           <p style="margin-top:1.5vh ;font-size:5vh">Join</p>
         </div>
 
@@ -141,6 +141,11 @@
           id = message.data;
         }
 
+        else if (message.type == 'joined_room') {
+          console.log(message.data);
+          console.log(message.message);
+        }
+
       }
 
     }
@@ -194,20 +199,61 @@
 
   <script>
 
-    desktopRoomInput = document.getElementById('desktop_room_input');
-    wideRoomInput = document.getElementById('wide_room_input');
+    // Join Room Box
+    desktopJoinRoomInput = document.getElementById('desktop_join_room_input');
+    wideJoinRoomInput = document.getElementById('wide_join_room_input');
 
-    desktopRoomInput.onkeyup = function(e) {
-      newValue = desktopRoomInput.value
-      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
-      wideRoomInput.value = newValue;
+    // Synchronise changes between the two boxes. If one changes, change the other one.
+    desktopJoinRoomInput.onkeyup = function(e) {
+      // If the user hit enter, try and join the room.
+      if (e.key === "Enter") {
+        roomNumber = desktopJoinRoomInput.input;
+        joinRoom(roomNumber);
+      }
+      else {
+        newValue = desktopJoinRoomInput.value
+        if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+        wideJoinRoomInput.value = newValue;
+      }
     }
 
-    wideRoomInput.onkeyup = function(e) {
-      newValue = wideRoomInput.value
-      if (newValue.length > 4) {newValue = newValue.substring(0,4);}
-      desktopRoomInput.value = newValue;
+    // Synchronise changes between the two boxes. If one changes, change the other one.
+    wideJoinRoomInput.onkeyup = function(e) {
+      // If the user hit enter, try and join the room.
+      if (e.key === "Enter") {
+        roomNumber = wideJoinRoomInput.value;
+        joinRoom(roomNumber);
+      }
+      else {
+        newValue = wideJoinRoomInput.value
+        if (newValue.length > 4) {newValue = newValue.substring(0,4);}
+        desktopJoinRoomInput.value = newValue;
+      }
     }
+
+    // Join Room Buttons
+    desktopJoinRoomButton = document.getElementById('desktop_join_room_button');
+    wideJoinRoomButton = document.getElementById('wide_join_room_button');
+
+    // If the join button is pressed, join the room.
+    desktopJoinRoomButton.onclick = function(e) {
+      roomNumber = desktopJoinRoomInput.value;
+      joinRoom(roomNumber);
+    }
+
+    // If the join button is pressed, join the room.
+    wideJoinRoomButton.onclick = function(e) {
+      roomNumber = wideJoinRoomInput.value;
+      joinRoom(roomNumber);
+    }
+
+    // Create Room Buttons
+    desktopCreateRoomButton = document.getElementById('desktop_create_room_button');
+    wideCreateRoomButton = document.getElementById('wide_create_room_button');
+
+    // When clicking the button join the room.
+    desktopCreateRoomButton.onclick = createRoom
+    wideCreateRoomButton.onclick = createRoom
 
   </script>
 
