@@ -166,6 +166,29 @@ wss.on('connection', ws => {
             // Send the user their id.
             ws.send(JSON.stringify({type:'id',data:ws.id}));
 
+        } else if (command == 'leave_room') {
+
+            // If the player is in a room.
+            if (users.get(ws.id) != null) {
+
+                // Get the room the player is in.
+                roomNumber = users.get(ws.id);
+                room = rooms.get(roomNumber);
+
+                // Make the player leave the room.
+                room.removePlayer(ws.id);
+
+                // Reset the room data in the user map.
+                users.set(ws.id,null);
+
+                // Alert the player that they left the room
+                ws.send(JSON.stringify({type:'message',data:"Left room  " + room.room + "."}));
+
+            }
+
+            // Tell the player their current state.
+            ws.send(JSON.stringify({type:'in_room',data:false}));
+
         }
 
     });

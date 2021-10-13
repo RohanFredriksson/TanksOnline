@@ -116,8 +116,6 @@
     </div>
 
   </div>
-  
-  <footer></footer>
 
   <script>
 
@@ -225,9 +223,11 @@
         
         else if (message.type == 'in_room') {
           inRoom = message.data;
-          if (inRoom) {
-            displayGame();
-          }
+
+          // Ensure the user is on the current screen.
+          if (inRoom) {displayGame();} 
+          else {displayLanding();}
+
         } 
         
         else if (message.type == 'id') {
@@ -283,6 +283,13 @@
     function getId() {
       if (isConnected) {
         socket.send(JSON.stringify({command:"get_id",args:[]}));
+      }
+    }
+
+    // Will make the player leave the room if in a room.
+    function leaveRoom() {
+      if (isConnected) {
+        socket.send(JSON.stringify({command:"leave_room",args:[]}));
       }
     }
     
