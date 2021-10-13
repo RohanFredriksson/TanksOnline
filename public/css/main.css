@@ -202,3 +202,25 @@ header {
     -o-transition: all 0.25s ease-in-out;
     transition: all 0.25s ease-in-out;
 }
+
+.desktopgame {
+    display:none;
+    margin-left:17.5%;
+    width:65vw; 
+    height: 40vw; 
+    position:absolute; 
+    top:50%; 
+    -ms-transform: translateY(-47%); 
+    transform: translateY(-47%); 
+}
+
+.widegame {
+    display:none;
+    margin-left:17.5%;
+    width:130vh; 
+    height: 80vh; 
+    position:absolute; 
+    top:50%; 
+    -ms-transform: translateY(-47%); 
+    transform: translateY(-47%); 
+}

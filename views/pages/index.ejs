@@ -24,32 +24,39 @@
     </div>
 
     <!-- Landing Page Button Box -->
-    <div class="desktopbox content" style="margin-left: 17.5%;">
+    <div id="desktop_landing">
+      <div class="desktopbox content" style="margin-left: 17.5%;">
 
-      <!-- Create Room Button -->
-      <div id="desktop_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
-          <p style="font-size:2.5vw; -ms-transform: translateY(0.75vw); transform: translateY(0.75vw);">Create a Room</p>
-      </div>
-
-      <!-- Join Room Button and Text Bar -->
-      <div style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%;">
-
-        <!-- Text Bar -->
-        <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input id="desktop_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
+        <!-- Create Room Button -->
+        <div id="desktop_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
+            <p style="font-size:2.5vw; -ms-transform: translateY(0.75vw); transform: translateY(0.75vw);">Create a Room</p>
         </div>
 
-        <!-- Join Room Button -->
-        <div id="desktop_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
-          <p style="margin-top:0.75vw ;font-size:2.5vw">Join</p>
+        <!-- Join Room Button and Text Bar -->
+        <div style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%;">
+
+          <!-- Text Bar -->
+          <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
+            <input id="desktop_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:2.5vw; background-color: whitesmoke; text-transform: uppercase;"></input>
+          </div>
+
+          <!-- Join Room Button -->
+          <div id="desktop_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
+            <p style="margin-top:0.75vw ;font-size:2.5vw">Join</p>
+          </div>
+
         </div>
 
       </div>
+      
+      <!-- Tank Customisation Box -->
+      <div class="desktopbox content" style="margin-left: 52.5%;">
 
+      </div>
     </div>
-    
-    <!-- Tank Customisation Box -->
-    <div class="desktopbox content" style="margin-left: 52.5%;">
+
+    <!-- Game Box -->
+    <div id="desktop_game" class="desktopgame content">
 
     </div>
 
@@ -72,38 +79,79 @@
     </div>
 
     <!-- Landing Page Button Box -->
-    <div class="widebox content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
+    <div id="wide_landing">
+      <div class="widebox content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
+        
+        <!-- Create Room Button -->
+        <div id="wide_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
+          <p style="font-size:5vh; -ms-transform: translateY(1.5vh); transform: translateY(1.5vh);">Create a Room</p>
+        </div>
+
+        <!-- Join Room Button and Text Bar -->
+        <div style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%;">
+
+          <!-- Text Bar -->
+          <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
+            <input id="wide_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
+          </div>
+
+          <!-- Join Room Button -->
+          <div id="wide_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
+            <p style="margin-top:1.5vh ;font-size:5vh">Join</p>
+          </div>
+
+        </div>
+
+      </div>
       
-      <!-- Create Room Button -->
-      <div id="wide_create_room_button" class="content hoverable" style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%; background-color: whitesmoke;">
-        <p style="font-size:5vh; -ms-transform: translateY(1.5vh); transform: translateY(1.5vh);">Create a Room</p>
+      <!-- Tank Customisation Box -->
+      <div class="widebox content" style="margin-left: 52.5%;">
+        
       </div>
-
-      <!-- Join Room Button and Text Bar -->
-      <div style="margin-top: 10%; margin-left:10%; width:80%; height:12.5%;">
-
-        <!-- Text Bar -->
-        <div class="content hoverable" style="float:left; width:60%; height:100%; background-color: whitesmoke;">
-          <input id="wide_join_room_input" maxlength="4" spellcheck="false" class="inputbox" style="font-size:5vh; background-color: whitesmoke; text-transform: uppercase;"></input>
-        </div>
-
-        <!-- Join Room Button -->
-        <div id="wide_join_room_button" class="content hoverable" style="margin-left: 10%; float:left; width:30%; height:100%; background-color: whitesmoke;">
-          <p style="margin-top:1.5vh ;font-size:5vh">Join</p>
-        </div>
-
-      </div>
-
     </div>
-    
-    <!-- Tank Customisation Box -->
-    <div class="widebox content" style="margin-left: 52.5%;">
-      
+
+    <!-- Game Box -->
+    <div id="wide_game" class="widegame content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
+
     </div>
 
   </div>
   
   <footer></footer>
+
+  <script>
+
+    desktopLanding = document.getElementById('desktop_landing');
+    desktopGame = document.getElementById('desktop_game');
+
+    wideLanding = document.getElementById('wide_landing');
+    wideGame = document.getElementById('wide_game');
+
+    // Functions to switch between screens.
+
+    // Switch the screen to the game screen.
+    function displayGame() {
+
+      desktopLanding.style.display = 'none';
+      desktopGame.style.display = 'block';
+
+      wideLanding.style.display = 'none';
+      wideGame.style.display = 'block';
+
+    }
+
+    // Switch the screen to the landing screen.
+    function displayLanding() {
+
+      desktopLanding.style.display = 'block';
+      desktopGame.style.display = 'none';
+
+      wideLanding.style.display = 'block';
+      wideGame.style.display = 'none';
+
+    }
+
+  </script>
 
   <script>
 
@@ -131,11 +179,11 @@
       desktopMessageBox.style.opacity = 100;
       wideMessageBox.style.opacity = 100;
 
-      // Make the message box disappear after 5 seconds.
+      // Make the message box disappear after 3 seconds.
       sendMessageTimeout = setTimeout(() => {
         desktopMessageBox.style.opacity = 0;
         wideMessageBox.style.opacity = 0;
-      },5000);
+      },3000);
       
     }
 
@@ -161,6 +209,7 @@
     socket.onclose = function (event) {
       isConnected = false;
       inRoom = false;
+      displayLanding();
     }
 
     socket.onmessage = function (event) {
@@ -176,6 +225,9 @@
         
         else if (message.type == 'in_room') {
           inRoom = message.data;
+          if (inRoom) {
+            displayGame();
+          }
         } 
         
         else if (message.type == 'id') {
@@ -291,8 +343,8 @@
     wideCreateRoomButton = document.getElementById('wide_create_room_button');
 
     // When clicking the button join the room.
-    desktopCreateRoomButton.onclick = createRoom
-    wideCreateRoomButton.onclick = createRoom
+    desktopCreateRoomButton.onclick = createRoom;
+    wideCreateRoomButton.onclick = createRoom;
 
   </script>
 
