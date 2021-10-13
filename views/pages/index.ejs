@@ -194,6 +194,7 @@
     var id = "";
     var isConnected = false;
     var inRoom = false;
+    var gameData = null;
 
     var socket = new WebSocket("ws://192.168.1.5:8999");
     // var socket = new WebSocket("ws://" + ip  +":8999");
@@ -218,7 +219,8 @@
       if ("type" in message) {
 
         if (message.type == 'game_data') {
-          console.log(message.data);
+          gameData = message.data;
+          console.log(gameData);
         } 
         
         else if (message.type == 'in_room') {
@@ -352,6 +354,42 @@
     // When clicking the button join the room.
     desktopCreateRoomButton.onclick = createRoom;
     wideCreateRoomButton.onclick = createRoom;
+
+  </script>
+
+  <script>
+
+    // Draw the game.
+    function drawGame() {
+
+      // Check if the game data exists.
+      if (gameData == null) {
+        return;
+      }
+
+
+
+    }
+
+    // Display the start menu for the host.
+    function displayStartMenu() {
+
+    }
+
+    // Display the start waiting screen for other players.
+    function displayStartWaiting() {
+      
+    }
+
+    // Display the map.
+    function displayTerrain() {
+
+    }
+
+    // Display the shop menu.
+    function displayShop() {
+
+    }
 
   </script>
 
