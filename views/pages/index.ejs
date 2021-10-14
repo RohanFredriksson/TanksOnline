@@ -58,6 +58,26 @@
     <!-- Game Box -->
     <div id="desktop_game" class="desktopgame content">
 
+      <!-- Host Start Menu -->
+      <div id="desktop_start" class="gamescreen">
+
+      </div>
+
+      <!-- Waiting Area -->
+      <div id="desktop_waiting" class="gamescreen">
+
+      </div>
+
+      <!-- Buy Menu -->
+      <div id="desktop_buy" class="gamescreen">
+
+      </div>
+
+      <!-- Map -->
+      <div id="desktop_map" class="gamescreen">
+
+      </div>
+
     </div>
 
   </div>
@@ -112,6 +132,26 @@
 
     <!-- Game Box -->
     <div id="wide_game" class="widegame content" style="margin-left: 52.5%; -ms-transform: translate(-70vh,-47%); transform: translate(-70vh,-47%);">
+
+      <!-- Host Start Menu -->
+      <div id="wide_start" class="gamescreen">
+
+      </div>
+
+      <!-- Waiting Area -->
+      <div id="wide_waiting" class="gamescreen">
+
+      </div>
+
+      <!-- Buy Menu -->
+      <div id="wide_buy" class="gamescreen">
+
+      </div>
+
+      <!-- Map -->
+      <div id="wide_map" class="gamescreen">
+
+      </div>
 
     </div>
 
@@ -219,7 +259,7 @@
 
         if (message.type == 'game_data') {
           gameData = message.data;
-          console.log(gameData);
+          drawGame();
         } 
         
         else if (message.type == 'in_room') {
@@ -358,6 +398,16 @@
 
   <script>
 
+    desktopStart = document.getElementById('desktop_start');
+    desktopWaiting = document.getElementById('desktop_waiting');
+    desktopBuy = document.getElementById('desktop_buy');
+    desktopMap = document.getElementById('desktop_map');
+
+    wideStart = document.getElementById('wide_start');
+    wideWaiting = document.getElementById('wide_waiting');
+    wideBuy = document.getElementById('wide_buy');
+    wideMap = document.getElementById('wide_map');
+
     // Draw the game.
     function drawGame() {
 
@@ -366,27 +416,93 @@
         return;
       }
 
+      // If the game hasn't started yet.
+      if (gameData.started == false) {
+
+        // If the player is a host, display the host menu.
+        for (let i = 0; i < gameData.players.length; i = i + 1) {
+          player = gameData.players[i];
+          
+          if (id == player.id) {
+            if (player.isHost) {
+              displayStart();
+              return;
+            }
+          }
+          
+        }
+
+        // Else display the normal waiting screen.
+        displayWaiting();
+        return;
+
+      }
+
 
 
     }
 
     // Display the start menu for the host.
-    function displayStartMenu() {
+    function displayStart() {
+
+      console.log("Start");
+      desktopStart.style.display = 'block';
+      desktopWaiting.style.display = 'none';
+      desktopBuy.style.display = 'none';
+      desktopMap.style.display = 'none';
+
+      wideStart.style.display = 'block';
+      wideWaiting.style.display = 'none';
+      wideBuy.style.display = 'none';
+      wideMap.style.display = 'none';
 
     }
 
     // Display the start waiting screen for other players.
-    function displayStartWaiting() {
+    function displayWaiting() {
 
-    }
+      console.log("Waiting");
+      desktopStart.style.display = 'none';
+      desktopWaiting.style.display = 'block';
+      desktopBuy.style.display = 'none';
+      desktopMap.style.display = 'none';
 
-    // Display the map.
-    function displayTerrain() {
+      wideStart.style.display = 'none';
+      wideWaiting.style.display = 'block';
+      wideBuy.style.display = 'none';
+      wideMap.style.display = 'none';
 
     }
 
     // Display the shop menu.
-    function displayShop() {
+    function displayBuy() {
+
+      console.log("Buy");
+      desktopStart.style.display = 'none';
+      desktopWaiting.style.display = 'none';
+      desktopBuy.style.display = 'block';
+      desktopMap.style.display = 'none';
+
+      wideStart.style.display = 'none';
+      wideWaiting.style.display = 'none';
+      wideBuy.style.display = 'block';
+      wideMap.style.display = 'none';
+
+    }
+
+    // Display the map.
+    function displayMap() {
+
+      console.log("Map");
+      desktopStart.style.display = 'none';
+      desktopWaiting.style.display = 'none';
+      desktopBuy.style.display = 'none';
+      desktopMap.style.display = 'block';
+
+      wideStart.style.display = 'none';
+      wideWaiting.style.display = 'none';
+      wideBuy.style.display = 'none';
+      wideMap.style.display = 'block';
 
     }
 

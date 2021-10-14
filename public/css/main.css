@@ -224,3 +224,9 @@ header {
     -ms-transform: translateY(-47%); 
     transform: translateY(-47%); 
 }
+
+.gamescreen {
+    width:100%;
+    height:100%;
+    display:none;
+}
