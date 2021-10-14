@@ -422,7 +422,7 @@
         // If the player is a host, display the host menu.
         for (let i = 0; i < gameData.players.length; i = i + 1) {
           player = gameData.players[i];
-          
+
           if (id == player.id) {
             if (player.isHost) {
               displayStart();
@@ -438,7 +438,14 @@
 
       }
 
+      // If the game is in the buy period, show the buy period menu.
+      if (gameData.inBuyPeriod) {
+        displayBuy();
+        return;
+      }
 
+      // Else display the map.
+      displayGame();
 
     }
 
