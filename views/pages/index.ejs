@@ -431,7 +431,8 @@
 
           if (id == player.id) {
             if (player.isHost) {
-              displayStart();
+              displayWaiting();
+              //displayStart();
               return;
             }
           }
@@ -485,6 +486,10 @@
       wideBuy.style.display = 'none';
       wideMap.style.display = 'none';
 
+      tank = document.getElementById('desktop_tank_waiting_0');
+      console.log(tank)
+      drawTank(tank,"#FF00FF");
+
     }
 
     // Display the shop menu.
@@ -516,6 +521,46 @@
       wideWaiting.style.display = 'none';
       wideBuy.style.display = 'none';
       wideMap.style.display = 'block';
+
+    }
+
+  </script>
+
+  <script>
+
+    function drawCircle(ctx,colour,x,y,r) {
+      ctx.fillStyle = colour;
+      ctx.beginPath();
+      ctx.arc(x,y,r,0,2 * Math.PI, false);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawRoundedRectangle(ctx,colour,x,y,w,h,r) {
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      ctx.fillStyle = colour;
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y,   x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x,   y+h, r);
+      ctx.arcTo(x,   y+h, x,   y,   r);
+      ctx.arcTo(x,   y,   x+w, y,   r);
+      ctx.closePath();
+      ctx.fill();
+
+      console.log(ctx);
+    }
+
+    function drawTank(tankCanvas,colour) {
+      
+      width = tankCanvas.getBoundingClientRect().width;
+      height = tankCanvas.getBoundingClientRect().height;
+
+      ctx = tankCanvas.getContext('2d');
+      drawCircle(ctx,colour,0.25*width,0.9*height,0.1*height);
+      drawCircle(ctx,colour,0.75*width,0.9*height,0.1*height);
+      drawRoundedRectangle(ctx,colour,0.25*width,0.58*height,0.5*width,0.42*height,0.07*width);
 
     }
 
